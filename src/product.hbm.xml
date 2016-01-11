@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+        
+<hibernate-mapping>
+    <class name="db.Product" table="product">
+        <id name="id" column="id">
+            <generator class="sequence"/>
+        </id>
+        <property name="insertOrder" column="insertOrder" type="int"/>
+        <property name="name" column="name" />
+        <property name="brand" column="brand" />
+        <property name="retailer" column="retailer" />
+        <property name="price" column="price" type="float" />
+        <property name="discountPrice" column="discountPrice" type="float" />
+        <property name="category" column="category" />
+        <property name="color" column="color" />
+        <property name="description" column="description" type="text"/>
+        <property name="url" column="url" />
+        <property name="imageUrl" column="image_url" />
+        <property name="isOutOfStock" column="is_out_of_stock" type="boolean"/>
+         
+    </class> 
+</hibernate-mapping>
