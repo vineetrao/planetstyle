@@ -17,6 +17,11 @@ public class SFAParser extends ProductParser {
 		// TODO Auto-generated constructor stub
 	}
 
+	public SFAParser(String url, int category) {
+		super(url, category);
+		// TODO Auto-generated constructor stub
+	}
+	
 	@Override
 	protected List<String> getProductColorFromHTML(Document doc)
 			throws Exception {

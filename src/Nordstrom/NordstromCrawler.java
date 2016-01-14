@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
@@ -23,12 +24,15 @@ public class NordstromCrawler implements DailyWebsiteCrawler {
 
 	public static void main(String[] args) throws Exception {
 
-		List<String> allCollUrls = new NordstromCrawler()
+		List<Entry<String, Integer>> allCollUrls = new NordstromCrawler()
 				.getAllCollectionUrlsForSite(MERCHANT_URL);
 
 		HTMLProduct override = new HTMLProduct();
 
-		for (String collUrl : allCollUrls) {
+		for (Entry e : allCollUrls) {
+
+			String collUrl = (String) e.getKey();
+			int category = (int) e.getValue();
 
 			System.out.println("Crawling : " + collUrl);
 
@@ -77,12 +81,12 @@ public class NordstromCrawler implements DailyWebsiteCrawler {
 	}
 
 	@Override
-	public List<String> getAllCollectionUrlsForSite(String url)
+	public List<Entry<String, Integer>> getAllCollectionUrlsForSite(String url)
 			throws Exception {
-		List<String> list = new ArrayList<String>();
+		List<Entry<String, Integer>> list = new ArrayList<>();
 		//list.add("C:\\Code\\workspace\\crawler\\src\\macys\\macys_mc.html");
 	//	list.add("http://shop.nordstrom.com/c/womens-handbags?origin=leftnav");
-		list.add("http://shop.nordstrom.com/c/sale-designer");
+	//	list.add("http://shop.nordstrom.com/c/sale-designer");
 	//	list.add("http://shop.nordstrom.com/c/all-mens-sale?origin=leftnav");
 		return list;
 	}

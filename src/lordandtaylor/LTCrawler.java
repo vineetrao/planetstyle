@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
@@ -11,6 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import macys.MacysCrawler;
 import sdk.HTMLProduct;
 import sdk.ProductXMLCreator;
 import sdk.auto.DailyWebsiteCrawler;
@@ -23,17 +26,19 @@ public class LTCrawler implements DailyWebsiteCrawler {
 
 	public static void main(String[] args) throws Exception {
 
-		List<String> allCollUrls = new LTCrawler()
+		List<Entry<String, Integer>> allCollUrls = new LTCrawler()
 				.getAllCollectionUrlsForSite(MERCHANT_URL);
 
 		HTMLProduct override = new HTMLProduct();
 
-		for (String collUrl : allCollUrls) {
+		for (Entry<String, Integer> e  : allCollUrls) {
 
+			String collUrl = (String) e.getKey();
+			int category = (int) e.getValue();
 			System.out.println("Crawling : " + collUrl);
 			
 			ProductXMLCreator xmlCreator = new ProductXMLCreator(collUrl,
-					new LTCrawler(), new LTParser(""), baseDir,
+					new LTCrawler(), new LTParser("", category), baseDir,
 					MERCHANT_ID, MERCHANT_NAME, MERCHANT_URL, override);
 
 			xmlCreator.generateXML();
@@ -78,14 +83,14 @@ public class LTCrawler implements DailyWebsiteCrawler {
 	}
 
 	@Override
-	public List<String> getAllCollectionUrlsForSite(String url)
+	public List<Entry<String, Integer>> getAllCollectionUrlsForSite(String url)
 			throws Exception {
-		List<String> list = new ArrayList<String>();
-
-		list.add("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/en/lord-and-taylor/search/handbags/best-selling-handbags");
-		list.add("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/en/lord-and-taylor/search/womens-apparel/womens-coats?sre=MHP_MOD3_L1_PROMO_WMNS");
-		list.add("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/en/SearchDisplay?sType=SimpleSearch&catalogId=10102&facet=xf_ads_f8:Y&categoryId=170154&storeId=10151&facetLabel=CLEARANCE&sre=MHP_MOD4_L1_PROMO_WMNS");
-		list.add("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/SearchDisplay?facet=ads_f6_ntk_cs%3AY&langId=-1&urlRequestType=Base&showResultsPage=true&categoryId=14174&sType=SimpleSearch&searchType=1000&top_category=13655&searchTermScope=&minPrice=&resultCatEntryType=&facetLabel=SALE&filterTerm=&metaData=&catalogId=10102&pageView=image&urlLangId=&searchTerm=&storeId=10151&beginIndex=0&maxPrice=&pageSize=&manufacturer=");
+		
+		List<Entry<String, Integer>> list = new ArrayList<>();
+		//list.add(new SimpleEntry("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/en/lord-and-taylor/search/handbags/best-selling-handbags", HTMLProduct.CATEGORY_BAGS));
+		list.add(new SimpleEntry("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/en/lord-and-taylor/search/womens-apparel/womens-coats?sre=MHP_MOD3_L1_PROMO_WMNS", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/en/SearchDisplay?sType=SimpleSearch&catalogId=10102&facet=xf_ads_f8:Y&categoryId=170154&storeId=10151&facetLabel=CLEARANCE&sre=MHP_MOD4_L1_PROMO_WMNS", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/SearchDisplay?facet=ads_f6_ntk_cs%3AY&langId=-1&urlRequestType=Base&showResultsPage=true&categoryId=14174&sType=SimpleSearch&searchType=1000&top_category=13655&searchTermScope=&minPrice=&resultCatEntryType=&facetLabel=SALE&filterTerm=&metaData=&catalogId=10102&pageView=image&urlLangId=&searchTerm=&storeId=10151&beginIndex=0&maxPrice=&pageSize=&manufacturer=", HTMLProduct.CATEGORY_WATCHES));
 		return list;
 	}
 

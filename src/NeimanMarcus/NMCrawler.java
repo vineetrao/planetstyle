@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
@@ -23,12 +24,15 @@ public class NMCrawler implements DailyWebsiteCrawler {
 
 	public static void main(String[] args) throws Exception {
 
-		List<String> allCollUrls = new NMCrawler()
+		List<Entry<String, Integer>> allCollUrls = new NMCrawler()
 				.getAllCollectionUrlsForSite(MERCHANT_URL);
 
 		HTMLProduct override = new HTMLProduct();
 
-		for (String collUrl : allCollUrls) {
+		for (Entry e : allCollUrls) {
+
+			String collUrl = (String) e.getKey();
+			int category = (int) e.getValue();
 
 			System.out.println("Crawling : " + collUrl);
 			new NMCrawler().getAllProductUrlsForCollection(collUrl).size();
@@ -81,11 +85,11 @@ public class NMCrawler implements DailyWebsiteCrawler {
 	}
 
 	@Override
-	public List<String> getAllCollectionUrlsForSite(String url)
+	public List<Entry<String, Integer>> getAllCollectionUrlsForSite(String url)
 			throws Exception {
-		List<String> list = new ArrayList<String>();
+		List<Entry<String, Integer>> list = new ArrayList<>();
 		//list.add("C:\\Code\\workspace\\crawler\\src\\macys\\macys_mc.html");
-		list.add("http://www.neimanmarcus.com/Jimmy-Choo-Hoops-Lace-Up-Leather-Pump-Black-Shoes/prod179700147_cat35080738__/p.prod?icid=&searchType=EndecaDrivenCat&rte=%252Fcategory.jsp%253FitemId%253Dcat35080738%2526pageSize%253D120%2526No%253D0%2526refinements%253D&eItemId=prod179700147&cmCat=product");
+		//list.add("http://www.neimanmarcus.com/Jimmy-Choo-Hoops-Lace-Up-Leather-Pump-Black-Shoes/prod179700147_cat35080738__/p.prod?icid=&searchType=EndecaDrivenCat&rte=%252Fcategory.jsp%253FitemId%253Dcat35080738%2526pageSize%253D120%2526No%253D0%2526refinements%253D&eItemId=prod179700147&cmCat=product");
 
 //		list.add("http://www.neimanmarcus.com/en-in/All-Handbags/cat46860739_cat42110769_cat13030735/c.cat");
 		return list;

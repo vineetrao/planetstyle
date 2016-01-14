@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
@@ -23,18 +25,21 @@ public class BDCrawler implements DailyWebsiteCrawler {
 
 	public static void main(String[] args) throws Exception {
 
-		List<String> allCollUrls = new BDCrawler()
+		List<Entry<String, Integer>> allCollUrls = new BDCrawler()
 				.getAllCollectionUrlsForSite(MERCHANT_URL);
 
 		HTMLProduct override = new HTMLProduct();
 
-		for (String collUrl : allCollUrls) {
+		for (Entry e  : allCollUrls) {
+
+			String collUrl = (String) e.getKey();
+			int category = (int) e.getValue();
 
 			System.out.println("Crawling : " + collUrl);
 			new BDCrawler().getAllProductUrlsForCollection(collUrl).size();
 
 			ProductXMLCreator xmlCreator = new ProductXMLCreator(collUrl,
-					new BDCrawler(), new BDParser(""), baseDir,
+					new BDCrawler(), new BDParser("", category), baseDir,
 					MERCHANT_ID, MERCHANT_NAME, MERCHANT_URL, override);
 
 			xmlCreator.generateXML();
@@ -81,13 +86,14 @@ public class BDCrawler implements DailyWebsiteCrawler {
 	}
 
 	@Override
-	public List<String> getAllCollectionUrlsForSite(String url)
+	public List<Entry<String, Integer>> getAllCollectionUrlsForSite(String url)
 			throws Exception {
-		List<String> list = new ArrayList<String>();
+		
+		List<Entry<String, Integer>> list = new ArrayList<>();
 		//list.add("C:\\Code\\workspace\\crawler\\src\\macys\\macys_mc.html");
-		list.add("http://www1.bloomingdales.com/shop/sale/handbags?id=5070&cm_sp=categorysplash_sale_sale_1-_-row4_image_n-_-handbags");
-		list.add("http://www1.bloomingdales.com/shop/womens-apparel/coats/Special_offers/Sales%20%26%20Offers?id=1001520&cm_sp=n_n_homepage_1-_-row1_imagemap_n-_-_mm2coatssave40to50womenintl");
-		list.add("http://www1.bloomingdales.com/shop/shoes/the-showroom/Special_offers/Sales%20%26%20Offers?id=1004464&cm_sp=n_n_homepage_1-_-row2_imagemap_n-_-_mm3entershowroomshoes");
+		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/sale/handbags?id=5070&cm_sp=categorysplash_sale_sale_1-_-row4_image_n-_-handbags", HTMLProduct.CATEGORY_BAGS));
+		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/womens-apparel/coats/Special_offers/Sales%20%26%20Offers?id=1001520&cm_sp=n_n_homepage_1-_-row1_imagemap_n-_-_mm2coatssave40to50womenintl", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/shoes/the-showroom/Special_offers/Sales%20%26%20Offers?id=1004464&cm_sp=n_n_homepage_1-_-row2_imagemap_n-_-_mm3entershowroomshoes", HTMLProduct.CATEGORY_SHOES));
 		return list;
 	}
 

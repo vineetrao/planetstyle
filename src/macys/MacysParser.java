@@ -16,6 +16,11 @@ public class MacysParser extends ProductParser {
 		super(url);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public MacysParser(String url, int category) {
+		super(url, category);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	protected List<String> getProductColorFromHTML(Document doc)

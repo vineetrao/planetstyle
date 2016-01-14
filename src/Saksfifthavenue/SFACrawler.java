@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
@@ -23,17 +25,20 @@ public class SFACrawler implements DailyWebsiteCrawler {
 
 	public static void main(String[] args) throws Exception {
 
-		List<String> allCollUrls = new SFACrawler()
+		List<Entry<String, Integer>> allCollUrls = new SFACrawler()
 				.getAllCollectionUrlsForSite(MERCHANT_URL);
 
 		HTMLProduct override = new HTMLProduct();
 
-		for (String collUrl : allCollUrls) {
+		for (Entry e : allCollUrls) {
+
+			String collUrl = (String) e.getKey();
+			int category = (int) e.getValue();
 
 			System.out.println("Crawling : " + collUrl);
 
 			ProductXMLCreator xmlCreator = new ProductXMLCreator(collUrl,
-					new SFACrawler(), new SFAParser(""), baseDir,
+					new SFACrawler(), new SFAParser("", category), baseDir,
 					MERCHANT_ID, MERCHANT_NAME, MERCHANT_URL, override);
 
 			xmlCreator.generateXML();
@@ -77,14 +82,14 @@ public class SFACrawler implements DailyWebsiteCrawler {
 	}
 
 	@Override
-	public List<String> getAllCollectionUrlsForSite(String url)
+	public List<Entry<String, Integer>> getAllCollectionUrlsForSite(String url)
 			throws Exception {
-		List<String> list = new ArrayList<String>();
+		List<Entry<String, Integer>> list = new ArrayList<>();
 		//list.add("C:\\Code\\workspace\\crawler\\src\\macys\\macys_mc.html");
-		list.add("http://www.saksfifthavenue.com/Handbags/shop/_/N-52jzot/Ne-6lvnb5?FOLDER%3C%3Efolder_id=2534374306622829&Ns=P_bestsellers_units%7C1%7C%7CP_brandname%7C%7CP_product_code");
-		list.add("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?N=306418048+1553&sre=salemainm1s1l2");
-		list.add("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?N=306623830+1553");
-		list.add("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?N=306622828+1553&sre=salemainm1s1l5");
+//		list.add(new SimpleEntry("http://www.saksfifthavenue.com/Handbags/shop/_/N-52jzot/Ne-6lvnb5?FOLDER%3C%3Efolder_id=2534374306622829&Ns=P_bestsellers_units%7C1%7C%7CP_brandname%7C%7CP_product_code", HTMLProduct.CATEGORY_BAGS));
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?N=306418048+1553&sre=salemainm1s1l2", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?N=306623830+1553", HTMLProduct.CATEGORY_SHOES));
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?N=306622828+1553&sre=salemainm1s1l5", HTMLProduct.CATEGORY_BAGS));
 		return list;
 	}
 

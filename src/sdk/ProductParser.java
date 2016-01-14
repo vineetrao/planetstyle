@@ -9,15 +9,23 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 
 public abstract class ProductParser {
 	
 	protected String url;
+	protected int category = HTMLProduct.CATEGORY_UNKNOWN;
 	
 	public ProductParser(String url){
 		this.url = url;
+	}
+	
+	public ProductParser(String url, int category){
+		this.url = url;
+		this.category = category;
 	}
 	
 	public String getUrl() {
@@ -26,6 +34,16 @@ public abstract class ProductParser {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	public int getCategory() 
+	{
+		return category;
+	}
+	
+	public void setCategory(int category) 
+	{
+		this.category = category;
 	}
 
 	public HTMLProduct getProductDetails() throws Exception{
@@ -68,7 +86,8 @@ public abstract class ProductParser {
 		prod.setColor(getProductColorFromHTML(doc));
 		prod.setStyle(getProductStyleFromHTML(doc));
 		prod.setBrand(getProductBrandFromHTML(doc));
-		prod.setCategory(getProductCategoryFromHTML(doc));
+		prod.setCategory(new ArrayList<>(Arrays.asList(String.valueOf(getCategory()))));
+//		prod.setCategory(getProductCategoryFromHTML(doc));
 		
 		return prod;
 	}

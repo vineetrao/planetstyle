@@ -16,6 +16,11 @@ public class BDParser extends ProductParser {
 		super(url);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public BDParser(String url, int category) {
+		super(url, category);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	protected List<String> getProductColorFromHTML(Document doc)
@@ -119,7 +124,7 @@ public class BDParser extends ProductParser {
 		Elements productPrice = priceDiv.select("span.priceSale");
 		if (!productPrice.isEmpty()) {
 			String priceOfProduct = productPrice.text().trim()
-					.replaceAll("\\p{Z}", "").replace("Now", "").replace("$", "").replace("USD", "")
+					.replaceAll("\\p{Z}", "").replace("Sale", "").replace("Now", "").replace("$", "").replace("USD", "")
 					.replace(".00", "").replaceAll(",", "").trim();
 			float j = Float.parseFloat(priceOfProduct);
 			return j;

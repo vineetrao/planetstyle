@@ -27,6 +27,14 @@ public class HTMLProduct {
 	private List<String> interest = new ArrayList<String>();
 	private List<String> relationship = new ArrayList<String>();
 	
+	//categories
+	public static final int CATEGORY_UNKNOWN = 0;
+	public static final int CATEGORY_BAGS = 1;
+	public static final int CATEGORY_SHOES = 2;
+	public static final int CATEGORY_CLOTHING = 3;
+	public static final int CATEGORY_WATCHES = 4;
+	
+	
 	public boolean isOutOfStock() {
 		return isOutOfStock;
 	}
