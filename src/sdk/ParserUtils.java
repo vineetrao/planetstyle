@@ -1362,8 +1362,8 @@ public class ParserUtils {
 				styles.add(masterStyles.get(masterStyle));
 		}
 		
-		if(isCelebrityDress(text))
-			styles.add("bollywood");
+	//	if(isCelebrityDress(text))
+	//		styles.add("bollywood");
 		
 		return new ArrayList<String>(styles);
 	}
