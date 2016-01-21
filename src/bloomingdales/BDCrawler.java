@@ -59,8 +59,10 @@ public class BDCrawler implements DailyWebsiteCrawler {
 				newUrl = url + "?p=" + i;
 			}
 
-			Document doc = Jsoup.connect(newUrl).timeout(10000)
+			int maxBodySize = 2048000;//2MB (default is 1MB) 0 for unlimited size
+			Document doc = Jsoup.connect(newUrl).maxBodySize(maxBodySize).timeout(10000)
 					.userAgent("Mozilla").get();
+			
 			Elements lis = doc.select("ul#thumbnails").select(
 					"li");
 			for (Element li : lis) {
@@ -91,9 +93,14 @@ public class BDCrawler implements DailyWebsiteCrawler {
 		
 		List<Entry<String, Integer>> list = new ArrayList<>();
 		//list.add("C:\\Code\\workspace\\crawler\\src\\macys\\macys_mc.html");
-		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/sale/handbags?id=5070&cm_sp=categorysplash_sale_sale_1-_-row4_image_n-_-handbags", HTMLProduct.CATEGORY_BAGS));
-		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/womens-apparel/coats/Special_offers/Sales%20%26%20Offers?id=1001520&cm_sp=n_n_homepage_1-_-row1_imagemap_n-_-_mm2coatssave40to50womenintl", HTMLProduct.CATEGORY_CLOTHING));
-		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/shoes/the-showroom/Special_offers/Sales%20%26%20Offers?id=1004464&cm_sp=n_n_homepage_1-_-row2_imagemap_n-_-_mm3entershowroomshoes", HTMLProduct.CATEGORY_SHOES));
+		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/sale/handbags/Sortby/BEST_SELLERS?id=5070&cm_sp=LEFTNAV_INT-_-sale-_-Header-Handbags;jsessionid=vqg4i4xJpywzeevXVfMgg2oD.MA100BLVNAV519_bloomies-navapp_replica_prod_cellB_ma100blvnav519_m01", HTMLProduct.CATEGORY_BAGS));	
+		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/sale/women/Womens_apparel_type,Sortby/Dresses,BEST_SELLERS?id=3985&cm_sp=LEFTNAV_INT-_-sale-_-Header-Women;jsessionid=vqg4i4xJpywzeevXVfMgg2oD.MA100BLVNAV519_bloomies-navapp_replica_prod_cellB_ma100blvnav519_m01", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/sale/women/Womens_apparel_type,Sortby/Coats,BEST_SELLERS?id=3985&cm_sp=LEFTNAV_INT-_-sale-_-Header-Women;jsessionid=vqg4i4xJpywzeevXVfMgg2oD.MA100BLVNAV519_bloomies-navapp_replica_prod_cellB_ma100blvnav519_m01", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/sale/women/Womens_apparel_type,Sortby/Jackets,BEST_SELLERS?id=3985&cm_sp=LEFTNAV_INT-_-sale-_-Header-Women;jsessionid=vqg4i4xJpywzeevXVfMgg2oD.MA100BLVNAV519_bloomies-navapp_replica_prod_cellB_ma100blvnav519_m01", HTMLProduct.CATEGORY_CLOTHING));
+			
+		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/sale/shoes/Shoe_style,Sortby/Flats%7CParty%20%26%20Evening%7CPumps%7CSandals,BEST_SELLERS?id=4841&cm_sp=NAVIGATION_INTL-_-TOP_NAV-_-3977-SALE-%26-CLEARANCE-Shoes", HTMLProduct.CATEGORY_SHOES));
+		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/sale/shoes/Shoe_style,Sortby/Booties%7CBoots,BEST_SELLERS?id=4841&cm_sp=NAVIGATION_INTL-_-TOP_NAV-_-3977-SALE-%26-CLEARANCE-Shoes", HTMLProduct.CATEGORY_SHOES));
+		list.add(new SimpleEntry("http://www1.bloomingdales.com/shop/sale/jewelry-accessories/Jewelry_accessory_sale_type,Sortby/Watches,BEST_SELLERS?id=5303&cm_sp=browse_sale_jewelry-%2526-accessories_1-_-row1_imagemap_n-_-_watches", HTMLProduct.CATEGORY_WATCHES));
 		return list;
 	}
 

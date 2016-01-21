@@ -82,6 +82,47 @@ public class ProductXMLReader {
 		return products;
 	}
 
+	public static ArrayList<Product> getProductsFromXML(File f) {
+		ArrayList<Product> products = new ArrayList<Product>();
+		try {
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+					System.out.println("File: " + f.getName());
+					Document doc = docBuilder.parse(f);
+					doc.getDocumentElement().normalize();
+					Node partner = doc.getElementsByTagName("partner").item(0);
+					String retailer = partner.getAttributes().getNamedItem("name").getNodeValue();
+					NodeList listOfProducts = doc.getElementsByTagName("product");
+					
+					for (int i = 0; i < listOfProducts.getLength(); i++) {
+
+						Product p = new Product();
+						Element productNode = (Element) listOfProducts.item(i);
+					
+						Element basic = (Element) (productNode.getElementsByTagName("basic")).item(0);
+						p.setInsertOrder(i);
+						p.setName(((Element) basic.getElementsByTagName("name").item(0)).getTextContent());
+						p.setDescription(((Element) basic.getElementsByTagName("description").item(0)).getTextContent());
+						p.setUrl(ParserXMLUtils.cleanHTML(((Element) basic.getElementsByTagName("url").item(0)).getTextContent()));
+						p.setPrice(Float.parseFloat(((Element) basic.getElementsByTagName("price").item(0)).getTextContent()));
+						p.setDiscountPrice(Float.parseFloat(((Element) basic.getElementsByTagName("discountPrice").item(0)).getTextContent()));
+						p.setCategory(((Element) basic.getElementsByTagName("category").item(0)).getTextContent());
+						p.setRetailer(retailer);
+						p.setImageUrl(ParserXMLUtils.cleanHTML(((Element) basic.getElementsByTagName("imageUrl").item(0)).getTextContent()));
+						p.setIsOutOfStock(false);
+
+						Element specific = (Element) productNode.getElementsByTagName("specific").item(0);
+						p.setBrand(((Element) specific.getElementsByTagName("brand").item(0)).getTextContent());
+						p.setColor(((Element) specific.getElementsByTagName("color").item(0)).getTextContent());
+
+						products.add(p);
+					}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Total Products : " + products.size());
+		return products;
+	}
 	/**
 	 * @param args
 	 */

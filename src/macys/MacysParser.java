@@ -97,7 +97,7 @@ public class MacysParser extends ProductParser {
 		Elements productPrices = priceDiv.select("span");
 		for (Element price : productPrices) {
 			String priceOfProduct = price.text().trim()
-					.replaceAll("\\p{Z}", "").replace("USD", "").replace("Orig.", "").replace("$", "")
+					.replaceAll("\\p{Z}", "").replace("USD", "").replace("Orig.", "").replace("Reg.", "").replace("$", "")
 					.replace(".00", "").replaceAll(",", "").trim();
 			float j = Float.parseFloat(priceOfProduct);
 			return j;			
@@ -122,7 +122,7 @@ public class MacysParser extends ProductParser {
 		if (!priceDiv.select("span.priceSale").isEmpty()) {
 			Elements productPrice = priceDiv.select("span.priceSale");
 			String priceOfProduct = productPrice.text().trim()
-					.replaceAll("\\p{Z}", "").replace("Now", "").replace("$", "").replace("USD", "")
+					.replaceAll("\\p{Z}", "").replace("Now", "").replace("Sale", "").replace("$", "").replace("USD", "")
 					.replace(".00", "").replaceAll(",", "").trim();
 			float j = Float.parseFloat(priceOfProduct);
 			return j;

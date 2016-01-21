@@ -19,6 +19,10 @@ public abstract class ProductParser {
 	protected String url;
 	protected int category = HTMLProduct.CATEGORY_UNKNOWN;
 	
+	public ProductParser()
+	{
+		
+	}
 	public ProductParser(String url){
 		this.url = url;
 	}

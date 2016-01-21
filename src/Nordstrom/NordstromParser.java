@@ -11,12 +11,22 @@ import sdk.HTMLProduct;
 import sdk.ProductParser;
 
 public class NordstromParser extends ProductParser {
+	
+	public NordstromParser()
+	{
+		super();
+	}
 
 	public NordstromParser(String url) {
 		super(url);
 		// TODO Auto-generated constructor stub
 	}
 
+	public NordstromParser(String url, int category) {
+		super(url, category);
+		// TODO Auto-generated constructor stub
+	}
+	
 	@Override
 	protected List<String> getProductColorFromHTML(Document doc)
 			throws Exception {
@@ -40,7 +50,7 @@ public class NordstromParser extends ProductParser {
 			throws Exception {
 
 		List<String> list = new ArrayList<String>();
-		Elements brand = doc.select("section#brand-title").select("a");
+		Elements brand = doc.select("section.brand-title").select("a");
 		String brandOfproduct = brand.text().toLowerCase().trim();
 		list.add(brandOfproduct);
 		return list;
@@ -58,7 +68,7 @@ public class NordstromParser extends ProductParser {
 
 	@Override
 	protected String getProductImagefromHTML(Document doc) throws Exception {
-		String image = doc.select("div#product-image").select("img").attr("src").trim();
+		String image = doc.select("div.main-window").select("div.main-image").select("img").attr("src").trim();
 		return image;
 	}
 
@@ -93,16 +103,20 @@ public class NordstromParser extends ProductParser {
 		if (outOfStock) {
 			return 0;
 		} 
-		Elements priceSection = doc.select("section#price");
+		Elements descSection = doc.select("div.description");
 		// is product discounted?
-		Elements priceSpan = priceSection.select("span.regular-price");
+		Elements priceSpan = descSection.select("div.price-original").select("span");
 		if (priceSpan.size()==0) 
 		{
-			priceSpan = priceSection.select("span");
+			priceSpan = descSection.select("div.price-display-item");
+		}
+		else 
+		{
+			priceSpan.remove(0);
 		}
 		for (Element price : priceSpan) {
 			String priceOfProduct = price.text().trim()
-					.replaceAll("\\p{Z}", "").replace("INR", "").replace("Was:", "")
+					.replaceAll("\\p{Z}", "").replace("INR", "").replace("Was:", "").replace("$", "")
 					.replace(".00", "").replaceAll(",", "").trim();
 			float j = Float.parseFloat(priceOfProduct);
 			return j;			
@@ -112,8 +126,7 @@ public class NordstromParser extends ProductParser {
 
 	@Override
 	protected String getProductNameFromHTML(Document doc) throws Exception {
-		String name = doc.select("section#product-title").select("h1").text().trim();
-		System.out.println("Product Name: " + name);
+		String name = doc.select("section.product-title").select("h1").text().trim();
 		return name;
 	}
 
@@ -124,13 +137,13 @@ public class NordstromParser extends ProductParser {
 		if (outOfStock) {
 			return 0;
 		} 
-		Elements priceSection = doc.select("section#price");
+		Elements descSection = doc.select("div.description");
 		// is product discounted?
-		Elements priceSpan = priceSection.select("span.sale-price");
+		Elements priceSpan = descSection.select("div.price-current");
 
 		if (!priceSpan.isEmpty()) {
 			String priceOfProduct = priceSpan.text().trim()
-					.replaceAll("\\p{Z}", "").replace("INR", "").replace("Now:", "")
+					.replaceAll("\\p{Z}", "").replace("INR", "").replace("Now:", "").replace("$", "")
 					.replace(".00", "").replaceAll(",", "").trim();
 			float j = Float.parseFloat(priceOfProduct);
 			return j;

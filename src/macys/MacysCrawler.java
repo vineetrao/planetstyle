@@ -58,9 +58,10 @@ public class MacysCrawler implements DailyWebsiteCrawler {
 			} else {
 				newUrl = url + "?p=" + i;
 			}
-
-			Document doc = Jsoup.connect(newUrl).timeout(10000)
+			int maxBodySize = 2048000;//2MB (default is 1MB) 0 for unlimited size
+			Document doc = Jsoup.connect(newUrl).maxBodySize(maxBodySize).timeout(10000)
 					.userAgent("Mozilla").get();
+			
 			Elements lis = doc.select("ul#thumbnails").select(
 					"li");
 			for (Element li : lis) {
@@ -90,12 +91,20 @@ public class MacysCrawler implements DailyWebsiteCrawler {
 			throws Exception {
 		List<Entry<String, Integer>> list = new ArrayList<>();
 		//list.add("C:\\Code\\workspace\\crawler\\src\\macys\\macys_mc.html");
-		list.add(new SimpleEntry("http://www1.macys.com/shop/handbags-accessories/michael-michael-kors?id=27726&edge=hybrid&cm_sp=c2_1111INT_subsplash_women-women%27s-brands-michael-michael-kors-_-row4-_-icon_handbags&intnl=true", HTMLProduct.CATEGORY_BAGS));
-		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/womens-coats?id=269&edge=hybrid&cm_re=2016.01.11-_-HOMEPAGE_INCLUDE_1-_-CATEGORY+--+5125+--+269%3Awomen&intnl=true", HTMLProduct.CATEGORY_CLOTHING));
-		list.add(new SimpleEntry("http://www1.macys.com/shop/handbags-accessories/sale-clearance?id=28273&edge=hybrid&cm_re=2016.01.11-_-HOMEPAGE_INCLUDE_1-_-CATEGORY+--+5125+--+28273%3Ahandbags&intnl=true", HTMLProduct.CATEGORY_BAGS));
+		//list.add(new SimpleEntry("http://www1.macys.com/shop/handbags-accessories/michael-michael-kors?id=27726&edge=hybrid&cm_sp=c2_1111INT_subsplash_women-women%27s-brands-michael-michael-kors-_-row4-_-icon_handbags&intnl=true", HTMLProduct.CATEGORY_BAGS));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/handbags-accessories/sale-clearance/Pageindex,Sortby,Productsperpage/1,BEST_SELLERS,120?id=28273&edge=hybrid", HTMLProduct.CATEGORY_BAGS));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/womens-coats/Pageindex,Sortby,Productsperpage/1,BEST_SELLERS,120?id=269&edge=hybrid&cm_sp=c2_1111INT_catsplash_women-_-row4-_-icon_coats&intnl=true", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/womens-sale-clearance/Department_type,Special_occasions,Pageindex,Sortby,Productsperpage/Dresses,Wear%20to%20Work,1,BEST_SELLERS,120?id=10066&edge=hybrid", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/womens-sale-clearance/Department_type,Special_occasions,Pageindex,Sortby,Productsperpage/Dresses,Party%2FCocktail,1,BEST_SELLERS,120?id=10066&edge=hybrid", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/womens-sale-clearance/Department_type,Special_occasions,Sortby/Dresses,Night%20Out,BEST_SELLERS?id=10066&edge=hybrid", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/womens-sale-clearance/Department_type,Special_occasions,Sortby/Dresses,Formal,BEST_SELLERS?id=10066&edge=hybrid", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/womens-sale-clearance/Department_type,Special_occasions,Sortby/Dresses,Daytime,BEST_SELLERS?id=10066&edge=hybrid", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/womens-sale-clearance/Department_type,Special_occasions,Sortby/Dresses,Casual,BEST_SELLERS?id=10066&edge=hybrid", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/womens-jackets/Sortby/BEST_SELLERS?id=120&edge=hybrid&cm_sp=c2_1111INT_catsplash_women-_-row4-_-icon_jackets-and-blazers&intnl=true", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/womens-sale-clearance/Department_type,Sortby/Suits,BEST_SELLERS?id=10066&edge=hybrid", HTMLProduct.CATEGORY_CLOTHING));
+		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/lingerie-sale-clearance/Sortby/PRICE_HIGH_TO_LOW?id=55733&edge=hybrid", HTMLProduct.CATEGORY_CLOTHING));
 		list.add(new SimpleEntry("http://www1.macys.com/shop/shoes/sale-clearance?id=13604&edge=hybrid&cm_re=2016.01.11-_-HOMEPAGE_INCLUDE_1-_-CATEGORY+--+5125+--+13604%3Ashoes&intnl=true", HTMLProduct.CATEGORY_SHOES));
 		list.add(new SimpleEntry("http://www1.macys.com/shop/jewelry-watches/watch-sale/Special_offers,Pageindex,Productsperpage/Clearance%2FCloseout,1,40?id=28067&edge=hybrid&cm_sp=c2_1111INT_catsplash_jewelry-%26-watches-watches-watches-_-row7-_-shop-all_shop-watch-clearance&panel=jewelry+%26+watches-watches-watches_7_product-pool%3A%20shop%20watch%20clearance&panel=undefined_7_product-pool:%20shop%20watch%20clearance", HTMLProduct.CATEGORY_WATCHES));
-		list.add(new SimpleEntry("http://www1.macys.com/shop/womens-clothing/dresses?id=5449&edge=hybrid&cm_sp=c2_1111INT_catsplash_women-_-row3-_-icon_dresses&intnl=true", HTMLProduct.CATEGORY_CLOTHING));
 		return list;
 	}
 

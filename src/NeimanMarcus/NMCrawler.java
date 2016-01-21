@@ -58,8 +58,10 @@ public class NMCrawler implements DailyWebsiteCrawler {
 				newUrl = url + "?p=" + i;
 			}
 
-			Document doc = Jsoup.connect(newUrl).timeout(10000)
+			int maxBodySize = 2048000;//2MB (default is 1MB) 0 for unlimited size
+			Document doc = Jsoup.connect(newUrl).maxBodySize(maxBodySize).timeout(10000)
 					.userAgent("Mozilla").get();
+			
 			Elements lis = doc.select("div.category-page").select("ul.category-items").select(
 					"li");
 			for (Element li : lis) {

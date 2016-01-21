@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 
 import sdk.HTMLProduct;
 import sdk.ProductXMLCreator;
+import sdk.ProductXMLCreatorMultiThreaded;
 import sdk.auto.DailyWebsiteCrawler;
 
 public class SFACrawler implements DailyWebsiteCrawler {
@@ -37,7 +38,7 @@ public class SFACrawler implements DailyWebsiteCrawler {
 
 			System.out.println("Crawling : " + collUrl);
 
-			ProductXMLCreator xmlCreator = new ProductXMLCreator(collUrl,
+			ProductXMLCreatorMultiThreaded xmlCreator = new ProductXMLCreatorMultiThreaded(collUrl,
 					new SFACrawler(), new SFAParser("", category), baseDir,
 					MERCHANT_ID, MERCHANT_NAME, MERCHANT_URL, override);
 
@@ -58,8 +59,10 @@ public class SFACrawler implements DailyWebsiteCrawler {
 				newUrl = url + "?p=" + i;
 			}
 
-			Document doc = Jsoup.connect(newUrl).timeout(10000)
+			int maxBodySize = 2048000;//2MB (default is 1MB) 0 for unlimited size
+			Document doc = Jsoup.connect(newUrl).maxBodySize(maxBodySize).timeout(10000)
 					.userAgent("Mozilla").get();
+			
 			Elements divs = doc.select("div#product-container")
 					.select("div.product-text");
 			for (Element div : divs) {
@@ -85,11 +88,45 @@ public class SFACrawler implements DailyWebsiteCrawler {
 	public List<Entry<String, Integer>> getAllCollectionUrlsForSite(String url)
 			throws Exception {
 		List<Entry<String, Integer>> list = new ArrayList<>();
-		//list.add("C:\\Code\\workspace\\crawler\\src\\macys\\macys_mc.html");
-//		list.add(new SimpleEntry("http://www.saksfifthavenue.com/Handbags/shop/_/N-52jzot/Ne-6lvnb5?FOLDER%3C%3Efolder_id=2534374306622829&Ns=P_bestsellers_units%7C1%7C%7CP_brandname%7C%7CP_product_code", HTMLProduct.CATEGORY_BAGS));
-		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?N=306418048+1553&sre=salemainm1s1l2", HTMLProduct.CATEGORY_CLOTHING));
-		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?N=306623830+1553", HTMLProduct.CATEGORY_SHOES));
-		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?N=306622828+1553&sre=salemainm1s1l5", HTMLProduct.CATEGORY_BAGS));
+
+		//sale evening dresses
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306422140+1553", HTMLProduct.CATEGORY_CLOTHING));
+		//sale cocktail dresses
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306422146+1553", HTMLProduct.CATEGORY_CLOTHING));
+		//sale day dresses
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306422153+1553", HTMLProduct.CATEGORY_CLOTHING));
+		//sale workwear dresses
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306436538+1553", HTMLProduct.CATEGORY_CLOTHING));
+		//sale party dresses
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306633759+1553", HTMLProduct.CATEGORY_CLOTHING));
+		//sale mini dresses
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306440465+1553", HTMLProduct.CATEGORY_CLOTHING));
+		
+		//sale coats
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&N=306633841+1553", HTMLProduct.CATEGORY_CLOTHING));
+		//sale jackets and vests
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&N=306436569+1553", HTMLProduct.CATEGORY_CLOTHING));
+		
+		//sale sandals shoes
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306624269+1553", HTMLProduct.CATEGORY_SHOES));
+		//sale pumps & slingbacks shoes
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306624262+1553", HTMLProduct.CATEGORY_SHOES));
+		//sale wedges shoes
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306624276+1553", HTMLProduct.CATEGORY_SHOES));
+		//sale shoes boots
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306624250+1553", HTMLProduct.CATEGORY_SHOES));
+		//sale shoes evening
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306624256+1553", HTMLProduct.CATEGORY_SHOES));
+		//sale shoes exotics
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&Ns=P_bestsellers_units|1||P_brandname||P_product_code&N=306624257+1553", HTMLProduct.CATEGORY_SHOES));
+		
+		//sale bags
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&N=306622829+1553", HTMLProduct.CATEGORY_BAGS));
+		
+		//sale watches
+		list.add(new SimpleEntry("http://www.saksfifthavenue.com/search/EndecaSearch.jsp?Ns=P_bestsellers_units%7c1%7c%7cP_brandname%7c%7cP_product_code&N=306418148+1553", HTMLProduct.CATEGORY_WATCHES));
+		
+		
 		return list;
 	}
 

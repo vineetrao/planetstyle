@@ -12,6 +12,10 @@ import sdk.ProductParser;
 
 public class SFAParser extends ProductParser {
 
+	public SFAParser()
+	{
+		super();
+	}
 	public SFAParser(String url) {
 		super(url);
 		// TODO Auto-generated constructor stub
