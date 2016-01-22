@@ -34,8 +34,8 @@ public abstract class ProductSynchronizer {
 				timeout(10000).get();
 	}
 	
-	private HTMLProduct prepareProductDetails(String url, Document doc) throws Exception {
-		
+	private HTMLProduct prepareProductDetails(String url, Document doc) throws Exception 
+	{	
 		HTMLProduct prod = new HTMLProduct();
 		prod.setUrl(getProductURLfromHTML(doc));
 		prod.setName(getProductNameFromHTML(doc));

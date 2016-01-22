@@ -17,19 +17,24 @@ public class NMParser extends ProductParser {
 		// TODO Auto-generated constructor stub
 	}
 
+	public NMParser(String url, int category) {
+		super(url, category);
+		// TODO Auto-generated constructor stub
+	}
+	
 	@Override
 	protected List<String> getProductColorFromHTML(Document doc)
 			throws Exception {
 
 		List<String> list = new ArrayList<String>();
-		Elements colors = doc.select("div#color-selection")
-				.select("select#color-selector").select("option");
+		Elements colors = doc.select("select.colorSelectBox")
+				.select("option");
 		int i = 1; 
 		for (Element color : colors) 
 		{
-			if (i++ > 1) 
+			if ("true".equals(color.attr("selected"))) 
 			{
-				list.add(color.text().trim().toLowerCase());
+				list.add(color.text().trim().toLowerCase()); 
 			}
 		}
 		return list;
@@ -40,7 +45,7 @@ public class NMParser extends ProductParser {
 			throws Exception {
 
 		List<String> list = new ArrayList<String>();
-		Elements brand = doc.select("section#brand-title").select("a");
+		Elements brand = doc.select("div.productDetails").select("a");
 		String brandOfproduct = brand.text().toLowerCase().trim();
 		list.add(brandOfproduct);
 		return list;
@@ -58,14 +63,14 @@ public class NMParser extends ProductParser {
 
 	@Override
 	protected String getProductImagefromHTML(Document doc) throws Exception {
-		String image = doc.select("div#product-image").select("img").attr("src").trim();
+		String image = doc.select("div.prod-img").select("img").attr("src").trim();
 		return image;
 	}
 
 	@Override
 	protected String getProductDescriptionFromHTML(Document doc)
 			throws Exception {
-		Elements description = doc.select("section#details-and-care").select("div.accordion-content");
+		Elements description = doc.select("div.product-details-info").select("div[itemprop=description]").select("div.accordion-content");
 		return description.text().trim();
 
 	}
@@ -93,16 +98,16 @@ public class NMParser extends ProductParser {
 		if (outOfStock) {
 			return 0;
 		} 
-		Elements priceSection = doc.select("section#price");
+		Elements priceSection = doc.select("div[itemprop=offers]");
 		// is product discounted?
-		Elements priceSpan = priceSection.select("span.regular-price");
+		Elements priceSpan = priceSection.select("span.item-price");
 		if (priceSpan.size()==0) 
 		{
-			priceSpan = priceSection.select("span");
+			priceSpan = priceSection.select("p.lbl_ItemPriceSingleItem");
 		}
 		for (Element price : priceSpan) {
 			String priceOfProduct = price.text().trim()
-					.replaceAll("\\p{Z}", "").replace("INR", "").replace("Was:", "")
+					.replaceAll("\\p{Z}", "").replace("INR", "").replace("Was:", "").replace("USD", "")
 					.replace(".00", "").replaceAll(",", "").trim();
 			float j = Float.parseFloat(priceOfProduct);
 			return j;			
@@ -112,7 +117,7 @@ public class NMParser extends ProductParser {
 
 	@Override
 	protected String getProductNameFromHTML(Document doc) throws Exception {
-		String name = doc.select("section#product-title").select("h1").text().trim();
+		String name = doc.select("section#productDetails").select("h1.product-name ").select("span").text().trim();
 		return name;
 	}
 

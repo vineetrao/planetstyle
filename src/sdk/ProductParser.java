@@ -56,18 +56,18 @@ public abstract class ProductParser {
 	
 	public Document getHTMLDocument() throws Exception{
 		try{
-			return Jsoup.connect(url).userAgent("Mozilla").header("X-Forwarded-For", "180.149.241.48").timeout(20000).get();
+			return Jsoup.connect(url).userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0").header("X-Forwarded-For", "180.149.241.48").timeout(20000).get();
 		}
 		catch(Exception e){
 			Thread.sleep(1000);
 			System.out.println("Retrying ...");
 			try{
-				return Jsoup.connect(url).userAgent("Mozilla").header("X-Forwarded-For", "180.149.241.48").timeout(20000).get();
+				return Jsoup.connect(url).userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0").header("X-Forwarded-For", "180.149.241.48").timeout(20000).get();
 			}
 			catch(Exception e1){
 				Thread.sleep(1000);
 				System.out.println("Retrying ...");
-				return Jsoup.connect(url).userAgent("Mozilla").header("X-Forwarded-For", "180.149.241.48").timeout(20000).get();
+				return Jsoup.connect(url).userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0").header("X-Forwarded-For", "180.149.241.48").timeout(20000).get();
 			}
 		}
 	}

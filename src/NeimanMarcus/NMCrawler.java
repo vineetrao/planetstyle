@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,7 +39,7 @@ public class NMCrawler implements DailyWebsiteCrawler {
 			new NMCrawler().getAllProductUrlsForCollection(collUrl).size();
 
 			ProductXMLCreator xmlCreator = new ProductXMLCreator(collUrl,
-					new NMCrawler(), new NMParser(""), baseDir,
+					new NMCrawler(), new NMParser("", category), baseDir,
 					MERCHANT_ID, MERCHANT_NAME, MERCHANT_URL, override);
 
 			xmlCreator.generateXML();
@@ -60,13 +61,13 @@ public class NMCrawler implements DailyWebsiteCrawler {
 
 			int maxBodySize = 2048000;//2MB (default is 1MB) 0 for unlimited size
 			Document doc = Jsoup.connect(newUrl).maxBodySize(maxBodySize).timeout(10000)
-					.userAgent("Mozilla").get();
+					.userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0").get();
 			
 			Elements lis = doc.select("div.category-page").select("ul.category-items").select(
 					"li");
 			for (Element li : lis) {
 
-				Elements urlFromPage = li.select("div.productname")
+				Elements urlFromPage = li.select("div.product-image-frame")
 						.select("a");
 				String finalUrl = urlFromPage.attr("href");
 
@@ -91,7 +92,7 @@ public class NMCrawler implements DailyWebsiteCrawler {
 			throws Exception {
 		List<Entry<String, Integer>> list = new ArrayList<>();
 		//list.add("C:\\Code\\workspace\\crawler\\src\\macys\\macys_mc.html");
-		//list.add("http://www.neimanmarcus.com/Jimmy-Choo-Hoops-Lace-Up-Leather-Pump-Black-Shoes/prod179700147_cat35080738__/p.prod?icid=&searchType=EndecaDrivenCat&rte=%252Fcategory.jsp%253FitemId%253Dcat35080738%2526pageSize%253D120%2526No%253D0%2526refinements%253D&eItemId=prod179700147&cmCat=product");
+		list.add(new SimpleEntry("http://www.neimanmarcus.com/en-in/Sale/Sale/Handbags/cat46520737_cat980731_cat980731/c.cat", HTMLProduct.CATEGORY_BAGS));
 
 //		list.add("http://www.neimanmarcus.com/en-in/All-Handbags/cat46860739_cat42110769_cat13030735/c.cat");
 		return list;

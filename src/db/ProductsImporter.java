@@ -5,9 +5,12 @@ package db;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -49,6 +52,7 @@ public class ProductsImporter {
 		int i = 0;
 		for (Product product : products) {
 			product.setColor("");
+			System.out.println(product.getUrl());
 			session.save(product);
 			if (i++ % 50 == 0) 
 			{
@@ -60,40 +64,33 @@ public class ProductsImporter {
 
 		session.getTransaction().commit();
 		session.close();
-		System.out.println("--------DONE---------");
+		System.out.println("--------Inserted Products:---------" + products.size());
 
 	}
 	
 	private static int totalProducts = 0;
 	public static void multiThreadedImport() 
 	{
-		ArrayList<File> files = new ArrayList<File>();
 		File dataDir = new File(ProductXMLReader.baseDir);
 		File[] retailerDirs = dataDir.listFiles();
-		for (File retailerDir : retailerDirs) {
-			File[] productFiles = retailerDir.listFiles();
-			for (File f : productFiles) {
-				files.add(f);
-			}
-		}
-		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		
 		int threads = Runtime.getRuntime().availableProcessors();
 		System.out.println("NUM THREADS: " + threads);
 		ExecutorService service = Executors.newFixedThreadPool(threads);
-		for (final File f: files) {
+		for (final File retailerDir : retailerDirs) {
 	        Runnable runnable = new Runnable() {
 	            public void run() {
 	            	try 
 	            	{
-	            		ArrayList<Product> products = ProductXMLReader.getProductsFromXML(f);
+	            		ArrayList<Product> products = ProductXMLReader.getProductsForRetailer(retailerDir);
+	            		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	            		Session session = sessionFactory.openSession();
 	            		session.beginTransaction();
 
 	            		int i = 0;
 	            		for (Product product : products) {
 	            			product.setColor("");
-	            			session.save(product);
+	            			session.saveOrUpdate(product);
 	            			if (i++ % 50 == 0) 
 	            			{
 	            				//flush a batch of inserts and release memory:
@@ -104,18 +101,34 @@ public class ProductsImporter {
 
 	            		session.getTransaction().commit();
 	            		session.close();
-	            		System.out.println("----Inserted " + i + " Products----From file ----" + f.getAbsolutePath());
+	            		System.out.println("----Inserted " + i + " Products----From file ----" + retailerDir.getAbsolutePath());
 	            		totalProducts += products.size();
 	            	}
 	            	catch(Exception e){
-	    				//e.printStackTrace();
-	    				System.out.println("####### Failed to insert: " + f.getAbsolutePath() + " : " + e.getMessage() + " ######");
+	    				e.printStackTrace();
+	    				System.out.println("####### Failed to insert : " + retailerDir.getAbsolutePath() + " : " + e.getMessage() + " ######");
 	    			}
 	            }
 	        };
 	        service.submit(runnable);
 	    }
 		service.shutdown();
+	}
+	
+	public static HashSet<String> getExistingProductUrls()
+	{
+		HashSet<String> set = new HashSet<String>();
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		SQLQuery query = session.createSQLQuery("select url from product");
+		List<String> rows = query.list();
+		System.out.println("Rows in DB: " + rows.size());
+		for(String row : rows){
+			//System.out.println(row);
+			set.add(row);
+		}
+		return set;
 	}
 
 }

@@ -5,9 +5,10 @@
         
 <hibernate-mapping>
     <class name="db.Product" table="product">
-        <id name="id" column="id">
-            <generator class="sequence"/>
-        </id>
+        <id name="url" column="url" />
+        <property name="id" column="id">
+<!-- 	<generator class="sequence"/> -->            
+        </property>
         <property name="insertOrder" column="insertOrder" type="int"/>
         <property name="name" column="name" />
         <property name="brand" column="brand" />
@@ -17,7 +18,6 @@
         <property name="category" column="category" />
         <property name="color" column="color" />
         <property name="description" column="description" type="text"/>
-        <property name="url" column="url" />
         <property name="imageUrl" column="image_url" />
         <property name="isOutOfStock" column="is_out_of_stock" type="boolean"/>
          
