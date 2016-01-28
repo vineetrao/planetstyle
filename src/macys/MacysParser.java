@@ -8,10 +8,19 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import sdk.HTMLProduct;
+import sdk.ParserUtils;
 import sdk.ProductParser;
 
 public class MacysParser extends ProductParser {
 
+	private String brand;
+	
+	public MacysParser() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
 	public MacysParser(String url) {
 		super(url);
 		// TODO Auto-generated constructor stub
@@ -37,11 +46,25 @@ public class MacysParser extends ProductParser {
 	@Override
 	protected List<String> getProductBrandFromHTML(Document doc)
 			throws Exception {
-
+		
 		List<String> list = new ArrayList<String>();
-		Elements brand = doc.select("div#brandLogo").select("img");
-		String brandOfproduct = brand.attr("alt").toLowerCase().trim();
-		list.add(brandOfproduct);
+
+		if (brand == null)
+		{
+			Elements brandElement = doc.select("div#brandLogo").select("img");
+			String brandOfproduct = brandElement.attr("alt").toLowerCase().trim();
+	
+			if (brandOfproduct == null || brandOfproduct.isEmpty()) 
+			{
+				String title = doc.select("h1#productTitle").text().toLowerCase().trim();
+				brand = ParserUtils.getBrandFromTitle(title);	
+			}
+			else 
+			{
+				brand = brandOfproduct;
+			}
+		}
+		list.add(brand);
 		return list;
 	}
 
@@ -107,7 +130,15 @@ public class MacysParser extends ProductParser {
 
 	@Override
 	protected String getProductNameFromHTML(Document doc) throws Exception {
-		String name = doc.select("h1#productTitle").text().trim();
+		String name = doc.select("h1#productTitle").text().toLowerCase().trim();
+		if (brand == null) 
+		{
+			getProductBrandFromHTML(doc);
+		}
+		if (!brand.isEmpty()) 
+		{
+			name = name.substring(brand.length());
+		}
 		return name;
 	}
 
@@ -137,7 +168,7 @@ public class MacysParser extends ProductParser {
 		ProductParser parser = new MacysParser
 
 
-		("http://www1.macys.com/shop/product/michael-michael-kors-selma-medium-satchel?ID=2438399&CategoryID=27726#fn=sp%3D1%26spc%3D417%26slotId%3D2");
+		("http://www1.macys.com/shop/product/1-madison-expedition-rabbit-fur-draped-vest?ID=2438093&CategoryID=269");
 			
 		
 		HTMLProduct prod = parser.getProductDetails();

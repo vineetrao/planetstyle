@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 
 import sdk.HTMLProduct;
 import sdk.ProductXMLCreator;
+import sdk.ProductXMLCreatorMultiThreaded;
 import sdk.auto.DailyWebsiteCrawler;
 
 public class BDCrawler implements DailyWebsiteCrawler {
@@ -35,10 +36,10 @@ public class BDCrawler implements DailyWebsiteCrawler {
 			String collUrl = (String) e.getKey();
 			int category = (int) e.getValue();
 
-			System.out.println("Crawling : " + collUrl);
-			new BDCrawler().getAllProductUrlsForCollection(collUrl).size();
+			System.out.println("Crawling : " + collUrl + " -- Category -- " + category);
+//			new BDCrawler().getAllProductUrlsForCollection(collUrl).size();
 
-			ProductXMLCreator xmlCreator = new ProductXMLCreator(collUrl,
+			ProductXMLCreatorMultiThreaded xmlCreator = new ProductXMLCreatorMultiThreaded(collUrl,
 					new BDCrawler(), new BDParser("", category), baseDir,
 					MERCHANT_ID, MERCHANT_NAME, MERCHANT_URL, override);
 
@@ -67,7 +68,7 @@ public class BDCrawler implements DailyWebsiteCrawler {
 					"li");
 			for (Element li : lis) {
 
-				Elements urlFromPage = li.select("div.shortDescription")
+				Elements urlFromPage = li.select("div.shortDescription").select("div.prodName")
 						.select("a");
 				String finalUrl = urlFromPage.attr("href");
 

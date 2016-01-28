@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 import javassist.compiler.Javac;
 import sdk.HTMLProduct;
 import sdk.ProductXMLCreator;
+import sdk.ProductXMLCreatorMultiThreaded;
 import sdk.auto.DailyWebsiteCrawler;
 import java.util.Map.Entry;
 import java.util.AbstractMap.SimpleEntry;
@@ -38,7 +39,7 @@ public class MacysCrawler implements DailyWebsiteCrawler {
 			int category = (int) e.getValue();
 			System.out.println("Crawling : " + collUrl);
 
-			ProductXMLCreator xmlCreator = new ProductXMLCreator(collUrl,
+			ProductXMLCreatorMultiThreaded xmlCreator = new ProductXMLCreatorMultiThreaded(collUrl,
 					new MacysCrawler(), new MacysParser("", category), baseDir,
 					MERCHANT_ID, MERCHANT_NAME, MERCHANT_URL, override);
 

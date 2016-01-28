@@ -34,10 +34,11 @@ public class ProductsImporter {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 		
 		//singleThreadedImport();
 		multiThreadedImport();
+		ExchangeRates.updateRate();
 //		ArrayList<Product> products = new ProductXMLReader().getAllProducts();
 //		System.out.println("Total Products Inserted: " + products.size());
 	}

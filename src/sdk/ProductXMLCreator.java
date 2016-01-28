@@ -12,6 +12,8 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 
+import lordandtaylor.LTCrawler;
+
 
 public class ProductXMLCreator {
 
@@ -78,6 +80,17 @@ public class ProductXMLCreator {
 				
 				overrideProductData(prod);
 				validateProductData(prod);
+				
+				//hack to fix product brand and name for lordandtaylor. 
+				//this may be a general occurence to get product name and brand from results page. Move it later into proper methods
+				if (crawler.getClass().equals(LTCrawler.class)) 
+				{
+					LTCrawler c = (LTCrawler) crawler;
+					prod.setName(c.getName(prodUrl));
+					List<String> list = new ArrayList<String>();
+					list.add(c.getBrand(prodUrl));
+					prod.setBrand(list);
+				}
 				
 				prods.add(prod);
 				

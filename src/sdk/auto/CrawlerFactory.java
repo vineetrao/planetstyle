@@ -4,10 +4,12 @@ import macys.MacysCrawler;
 import macys.MacysParser;
 import sdk.ProductParser;
 
+
 public class CrawlerFactory {
 
 	public static DailyWebsiteCrawler getCrawlerForSite(String url) throws Exception{
-//		if(url.contains("stalkbuylove"))
+		
+//		else if(url.contains("stalkbuylove"))
 //			return new StalkBuyLoveCrawler();
 //		else if(url.contains("shopnineteen"))
 //			return new ShopNineteenCrawler();

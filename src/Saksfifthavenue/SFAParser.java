@@ -46,7 +46,7 @@ public class SFAParser extends ProductParser {
 			throws Exception {
 
 		List<String> list = new ArrayList<String>();
-		Elements brand = doc.select("div.detail-column").select("h1.component").select("a");
+		Elements brand = doc.select("div.main-product").select("div.detail-column").select("h1.component").select("a");
 		String brandOfproduct = brand.text().toLowerCase().trim();
 		list.add(brandOfproduct);
 		return list;
@@ -117,7 +117,7 @@ public class SFAParser extends ProductParser {
 
 	@Override
 	protected String getProductNameFromHTML(Document doc) throws Exception {
-		String name = doc.select("div.detail-column").select("header").select("h2.short-description").text().trim();
+		String name = doc.select("div.main-product").select("div.detail-column").select("header").select("h2.short-description").text().trim();
 		return name;
 	}
 
@@ -143,7 +143,7 @@ public class SFAParser extends ProductParser {
 		ProductParser parser = new SFAParser
 
 
-		("http://www.saksfifthavenue.com/main/ProductDetail.jsp?PRODUCT%3C%3Eprd_id=845524446808209&FOLDER%3C%3Efolder_id=2534374306622828&bmUID=k_ejkwf");
+		("http://www.saksfifthavenue.com/main/ProductDetail.jsp?PRODUCT%3C%3Eprd_id=845524446434829");
 			
 		
 		HTMLProduct prod = parser.getProductDetails();

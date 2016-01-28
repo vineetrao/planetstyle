@@ -12,6 +12,11 @@ import sdk.ProductParser;
 
 public class BDParser extends ProductParser {
 
+	public BDParser()
+	{
+		super();
+	}
+	
 	public BDParser(String url) {
 		super(url);
 		// TODO Auto-generated constructor stub
@@ -39,10 +44,12 @@ public class BDParser extends ProductParser {
 			throws Exception {
 
 		List<String> list = new ArrayList<String>();
-		Elements brand = doc.select("div#pdp_main").select("script");
+		/*Elements brand = doc.select("div#pdp_main").select("script");
 		String brandOfproduct = brand.html();
 		brandOfproduct = brandOfproduct.substring(brandOfproduct.lastIndexOf("= \""), brandOfproduct.indexOf("\";"))
 				.replaceAll("\"", "").replaceAll("=", "").toLowerCase().trim();
+		*/
+		String brandOfproduct = doc.select("div#productDescription").select("a#brandNameLink").text().trim();
 		list.add(brandOfproduct);
 		return list;
 	}
@@ -95,21 +102,18 @@ public class BDParser extends ProductParser {
 		if (outOfStock) {
 			return 0;
 		} 
-		Elements priceDiv = doc.select("div#PriceDisplay").select("div.priceSale");
-		Elements productPrices = priceDiv.select("span.priceBig");
-		for (Element price : productPrices) {
-			String priceOfProduct = price.text().trim()
-					.replaceAll("\\p{Z}", "").replace("USD", "").replace("Orig", "").replace("$", "")
+		Elements priceDiv = doc.select("div#PriceDisplay").select("div.priceSale").select("div#orgPrice");
+		Elements productPrice = priceDiv.select("span.priceBig");
+			String priceOfProduct = productPrice.text().trim()
+					.replaceAll("\\p{Z}", "").replace("USD", "").replace("Orig.", "").replace("$", "").replace("Reg.", "")
 					.replace(".00", "").replaceAll(",", "").trim();
 			float j = Float.parseFloat(priceOfProduct);
 			return j;			
-		}
-		return 0;
 	}
 
 	@Override
 	protected String getProductNameFromHTML(Document doc) throws Exception {
-		String name = doc.select("h1#productTitle").text().trim();
+		String name = doc.select("div#productDescription").select("div#productName").text().trim();
 		return name;
 	}
 
@@ -120,10 +124,10 @@ public class BDParser extends ProductParser {
 		if (outOfStock) {
 			return 0;
 		} 
-		Elements priceDiv = doc.select("div#PriceDisplay").select("div.priceSale");
-		Elements productPrice = priceDiv.select("span.priceSale");
+		Elements priceDiv = doc.select("div#PriceDisplay").select("div.priceSale").select("div#salePrice");
+		String productPrice = priceDiv.select("span.priceSale").text();
 		if (!productPrice.isEmpty()) {
-			String priceOfProduct = productPrice.text().trim()
+			String priceOfProduct = productPrice.trim()
 					.replaceAll("\\p{Z}", "").replace("Sale", "").replace("Now", "").replace("$", "").replace("USD", "")
 					.replace(".00", "").replaceAll(",", "").trim();
 			float j = Float.parseFloat(priceOfProduct);

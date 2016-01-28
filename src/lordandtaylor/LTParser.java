@@ -2,6 +2,8 @@ package lordandtaylor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +14,11 @@ import sdk.ProductParser;
 
 public class LTParser extends ProductParser {
 
+	public LTParser() 
+	{
+		super();
+	}
+	
 	public LTParser(String url) {
 		super(url);
 		// TODO Auto-generated constructor stub
@@ -67,6 +74,11 @@ public class LTParser extends ProductParser {
 			throws Exception {
 
 		List<String> list = new ArrayList<String>();
+//		String scriptsHtml = doc.select("div#warp").select("script").html();
+//		System.out.println(scriptsHtml);
+//		Pattern p = Pattern.compile("(?is)brand\": (.+?)\""); // Regex for the value of the key
+//		Matcher m = p.matcher(scriptsHtml);
+//		String brandOfproduct = m.group(1);
 //		Elements brand = doc.select("div#brandLogo").select("img");
 //		String brandOfproduct = brand.attr("alt").toLowerCase().trim();
 //		list.add(brandOfproduct);
@@ -130,7 +142,7 @@ public class LTParser extends ProductParser {
 		Elements detailsDiv = doc.select("div[id^=entitledItem]");
 		String details = detailsDiv.text(); 
 		String priceText = details.substring(details.indexOf("listPrice"));
-		priceText = priceText.substring(priceText.indexOf("$"), priceText.indexOf("\",")).replace("$", ""); 
+		priceText = priceText.substring(priceText.indexOf("$"), priceText.indexOf("\",")).replace("$", "").replace(",", ""); 
 		float j = Float.parseFloat(priceText);
 		return j;			
 	}
@@ -156,9 +168,9 @@ public class LTParser extends ProductParser {
 		Elements detailsDiv = doc.select("div[id^=entitledItem]");
 		String details = detailsDiv.text(); 
 		String listPrice = details.substring(details.indexOf("listPrice"));
-		listPrice = listPrice.substring(listPrice.indexOf("$"), listPrice.indexOf("\",")).replace("$", ""); 
+		listPrice = listPrice.substring(listPrice.indexOf("$"), listPrice.indexOf("\",")).replace("$", "").replace(",", ""); 
 		String offerPrice = details.substring(details.indexOf("offerPrice"));
-		offerPrice = offerPrice.substring(offerPrice.indexOf("$"), offerPrice.indexOf("\",")).replace("$", ""); 
+		offerPrice = offerPrice.substring(offerPrice.indexOf("$"), offerPrice.indexOf("\",")).replace("$", "").replace(",", ""); 
 
 		float lp = Float.parseFloat(listPrice);
 		float op = Float.parseFloat(offerPrice);
@@ -180,7 +192,7 @@ public class LTParser extends ProductParser {
 //		("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/en/lord-and-taylor/brands/best-selling-handbags/suzannah-leather-tote");
 //		("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/en/lord-and-taylor/link-small-leather-shoulder-bag");
 			
-		("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/ProductDisplay?urlRequestType=Base&catalogId=10102&categoryId=553225&productId=4268747&errorViewName=ProductDisplayErrorView&urlLangId=-1&langId=-1&top_category=17651&parent_category_rn=17651&storeId=10151");
+		("http://www.lordandtaylor.com/webapp/wcs/stores/servlet/en/lord-and-taylor/a-line-halter-gown-0144-jgk60g50--1");
 		
 		HTMLProduct prod = parser.getProductDetails();
 		System.out.println(prod.isOutOfStock());

@@ -17,11 +17,11 @@ $start_num = (!empty($_GET['start'])) ? trim($_GET['start']) : "0" ;
 $brand = (!empty($_GET['brand'])) ? trim($_GET['brand']) : "" ;
 
 // get all products from products table
-$result = mysql_query(" SELECT id, name, description, price, discountPrice, retailer, image_url, url 
-						FROM product
-                        WHERE brand='$brand'
-						ORDER BY insertOrder, id ASC
-						LIMIT $start_num,5") 
+$result = mysql_query(" SELECT id, name, description, ROUND((price*@rate)) as price, ROUND((discountPrice*@rate)) as discountPrice, retailer, brand, image_url, url 
+			FROM product, (select @rate:=rate from ExchangeRates where country_code='INR') AS ER
+                        WHERE brand='$brand' and discountPrice>10
+			ORDER BY insertOrder, id ASC
+			LIMIT $start_num,5") 
 		  or die(mysql_error());
  
 // check for empty result
@@ -39,6 +39,7 @@ if (mysql_num_rows($result) > 0) {
         $product["price"] = $row["price"];
         $product["discountPrice"] = $row["discountPrice"];
         $product["retailer"] = $row["retailer"];
+        $product["brand"] = $row["brand"];
         $product["image_url"] = $row["image_url"];
         $product["url"] = $row["url"];
         

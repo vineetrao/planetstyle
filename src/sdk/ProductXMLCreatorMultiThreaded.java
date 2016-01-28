@@ -16,6 +16,8 @@ import java.util.concurrent.Future;
 
 import org.apache.commons.lang.StringUtils;
 
+import lordandtaylor.LTCrawler;
+
 
 public class ProductXMLCreatorMultiThreaded {
 
@@ -83,7 +85,24 @@ public class ProductXMLCreatorMultiThreaded {
 		            	System.out.println("Parsing URL : " + prodUrl );
 		            	ProductParser parserInstance = (ProductParser) parser.getClass().newInstance();
 		            	parserInstance.setUrl(prodUrl);
+		            	parserInstance.setCategory(parser.getCategory());
 						HTMLProduct prod = parserInstance.getProductDetails();
+						//hack to fix product brand and name for lordandtaylor. 
+						//this may be a general occurence to get product name and brand from results page. Move it later into proper methods
+						if (crawler.getClass().equals(LTCrawler.class)) 
+						{
+							try {
+							LTCrawler c = (LTCrawler) crawler;
+							prod.setName(c.getName(prodUrl));
+							List<String> list = new ArrayList<String>();
+							list.add(c.getBrand(prodUrl));
+							prod.setBrand(list);
+							}
+							catch (Exception e) 
+							{
+								e.printStackTrace();
+							}
+						}
 		            	return prod;
 	            	}
 	            	catch(Exception e){
@@ -114,6 +133,7 @@ public class ProductXMLCreatorMultiThreaded {
 				
 				overrideProductData(prod);
 				validateProductData(prod);
+				
 				
 				uniqueCats.addAll(prod.getCategory());
 				uniqueColor.addAll(prod.getColor());

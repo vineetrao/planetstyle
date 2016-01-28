@@ -18,7 +18,7 @@ $start_num = (!empty($_GET['start'])) ? trim($_GET['start']) : "0" ;
 // get all products from products table
 $result = mysql_query(" SELECT id, name, description, price, discountPrice, retailer, image_url, url 
 						FROM product
-                        WHERE (discountPrice < price) AND (discountPrice > 0)
+                        WHERE discountPrice > 0 and discountPrice >= (price / 2) and discountPrice < 300 and discountPrice > 50
 						ORDER BY insertOrder, id ASC
 						LIMIT $start_num,5") 
 		  or die(mysql_error());

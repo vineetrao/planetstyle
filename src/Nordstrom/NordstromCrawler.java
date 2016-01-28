@@ -116,7 +116,7 @@ public class NordstromCrawler implements DailyWebsiteCrawler {
 		list.add(new SimpleEntry("http://shop.nordstrom.com/c/sale-womens-wallets?origin=leftnav", HTMLProduct.CATEGORY_BAGS));
 		
 		//sale watches
-		list.add(new SimpleEntry("http://shop.nordstrom.com/c/sale-womens-watches?origin=leftnav", HTMLProduct.CATEGORY_BAGS));
+		list.add(new SimpleEntry("http://shop.nordstrom.com/c/sale-womens-watches?origin=leftnav", HTMLProduct.CATEGORY_WATCHES));
 		
 		return list;
 	}

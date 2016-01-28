@@ -12,6 +12,11 @@ import sdk.ProductParser;
 
 public class NMParser extends ProductParser {
 
+	public NMParser() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
 	public NMParser(String url) {
 		super(url);
 		// TODO Auto-generated constructor stub
